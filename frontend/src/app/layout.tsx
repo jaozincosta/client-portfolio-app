@@ -1,10 +1,6 @@
 import "./globals.css";
+import { Toaster } from "sonner";
 import { ReactQueryProvider } from "@/lib/react-query";
-
-export const metadata = {
-  title: "Client Portfolio App",
-  description: "Gerenciador de Clientes e Ativos",
-};
 
 export default function RootLayout({
   children,
@@ -14,7 +10,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          {children}
+          <Toaster richColors position="top-right" />
+        </ReactQueryProvider>
       </body>
     </html>
   );
