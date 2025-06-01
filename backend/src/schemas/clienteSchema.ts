@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const clienteSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
-  email: z.string().email("Email inválido"),
+  email: z.string().email("E-mail inválido"),
   status: z.boolean(),
 });
 
