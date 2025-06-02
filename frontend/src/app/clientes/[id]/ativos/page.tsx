@@ -29,20 +29,22 @@ const ativoSchema = z.object({
 type AtivoFormData = z.infer<typeof ativoSchema>;
 
 export default function AtivosDoClientePage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = Number(params?.id);
   const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AtivoFormData>({
     resolver: zodResolver(ativoSchema),
   });
 
   const { data: ativos, isLoading } = useQuery<Ativo[]>({
     queryKey: ["ativos", id],
+    enabled: !isNaN(id),
     queryFn: async () => {
       const res = await api.get(`/clientes/${id}/ativos`);
       return res.data;
@@ -51,16 +53,20 @@ export default function AtivosDoClientePage() {
 
   const mutation = useMutation({
     mutationFn: async (data: AtivoFormData) => {
-      await api.post("/ativos", { ...data, clienteId: Number(id) });
+      await api.post("/ativos", { ...data, clienteId: id });
     },
     onSuccess: () => {
       toast.success("Ativo cadastrado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["ativos", id] });
       reset();
     },
+    onError: () => {
+      toast.error("Erro ao cadastrar o ativo.");
+    },
   });
 
   const onSubmit = (data: AtivoFormData) => {
+    if (isNaN(id)) return toast.error("ID do cliente inválido.");
     mutation.mutate(data);
   };
 
@@ -88,7 +94,9 @@ export default function AtivosDoClientePage() {
           )}
         </div>
 
-        <Button type="submit">Cadastrar Ativo</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Cadastrando..." : "Cadastrar Ativo"}
+        </Button>
       </form>
 
       {isLoading ? (

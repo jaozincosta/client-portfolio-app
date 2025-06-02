@@ -3,13 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql" // ou "mysql" ou "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model Cliente {
-  id     Int     @id @default(autoincrement())
-  nome   String
-  email  String  @unique
-  status Boolean
+  id      Int     @id @default(autoincrement())
+  nome    String
+  email   String  @unique
+  status  Boolean
+  ativos  Ativo[]
+}
+
+model Ativo {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  valor      Float
+  clienteId  Int
+  cliente    Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 }
