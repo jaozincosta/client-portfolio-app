@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ReactQueryProvider } from "@/lib/react-query";
+import { ReactQueryProvider } from "../app/lib/react-query"
 
 export default function RootLayout({
   children,
