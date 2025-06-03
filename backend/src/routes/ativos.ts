@@ -15,13 +15,12 @@ export async function ativoRoutes(app: FastifyInstance) {
       return reply.status(400).send(parsed.error);
     }
 
-    const { clienteId, nome, valor } = parsed.data;
+    const { nome, valor, clienteId } = parsed.data;
 
     try {
       const cliente = await prisma.cliente.findUnique({
         where: { id: clienteId },
       });
-
       if (!cliente) {
         return reply.status(404).send({ error: "Cliente não encontrado" });
       }
@@ -32,9 +31,10 @@ export async function ativoRoutes(app: FastifyInstance) {
 
       return reply.status(201).send(ativo);
     } catch (error) {
+      console.error("Erro ao criar ativo:", error);
       return reply
         .status(500)
-        .send({ error: "Erro ao cadastrar ativo", detail: error });
+        .send({ error: "Erro ao criar ativo", detail: error });
     }
   });
 }

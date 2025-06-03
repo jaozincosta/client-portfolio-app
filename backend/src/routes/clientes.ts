@@ -38,7 +38,6 @@ export async function clienteRoutes(app: FastifyInstance) {
   // 🔹 Criar novo cliente
   app.post("/clientes", async (request, reply) => {
     const parsed = clienteSchema.safeParse(request.body);
-
     if (!parsed.success) {
       return reply.status(400).send(parsed.error);
     }
@@ -49,9 +48,9 @@ export async function clienteRoutes(app: FastifyInstance) {
       });
 
       return reply.status(201).send(cliente);
-    } catch (err) {
-      console.error(err);
-      return reply.status(500).send({ error: "Erro ao criar cliente" });
+    } catch (error) {
+      console.error("Erro ao criar cliente:", error); 
+      return reply.status(500).send({ error: "Erro interno ao criar cliente" });
     }
   });
 
